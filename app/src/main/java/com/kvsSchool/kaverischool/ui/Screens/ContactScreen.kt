@@ -2,13 +2,17 @@ package com.kvsSchool.kaverischool.ui.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,18 +30,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kvsSchool.kaverischool.R
 import com.kvsSchool.kaverischool.ui.theme.hex
-import com.kvsSchool.kaverischool.util.CheckSignedIn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(
+fun ContactScreen(
     modifier: Modifier = Modifier
 ) {
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -45,7 +48,9 @@ fun AboutScreen(
                     Text(
                         text = stringResource(id = R.string.app_name),
                         fontSize = 38.sp,
-                        fontFamily = FontFamily.Cursive
+                        color = Color.White,
+                        fontFamily = FontFamily.Cursive,
+                        fontWeight = FontWeight.SemiBold
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -62,6 +67,7 @@ fun AboutScreen(
             modifier = Modifier
                 .background(Color.White)
                 .padding(it)
+                .fillMaxHeight()
                 .fillMaxSize(),
         ) {
             Image(
@@ -72,64 +78,56 @@ fun AboutScreen(
                 modifier = Modifier
                     .fillMaxSize()
             )
+
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .background(Color.Transparent)
-                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Display(textName = "History of the Institution", text = stringResource(id = R.string.history))
-                Display(textName = "Foreword by the Administrator - KVSHS", text = stringResource(id = R.string.Foreword_Administrator))
-                Display(textName = "Foreword by the Headmistress – LKG to 10th", text = stringResource(id = R.string.Foreword_Headmistress))
-                Display(textName = "Learning Where Merit and Values Converge", text = stringResource(id = R.string.Learning_where_Merit_and_Values))
 
-                
-                
-            }
+                Spacer(modifier = Modifier.padding(25.dp))
 
-        }
-    }
-}
-
-
-@Composable
-fun Display(
-    textName: String,
-    text: String
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        colors = CardDefaults.cardColors(hex)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(6.dp)
-        ) {
-            Text(
-                text = textName,
-                modifier = Modifier
-                    .padding(12.dp),
-                fontSize = 24.sp,
-                color = Color.White,
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.SemiBold,
-
-                )
-            Text(
-                    text = text,
+                Card(
                     modifier = Modifier
-                        .padding(16.dp),
-                    fontFamily = FontFamily.SansSerif,
-                color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Normal,
-                    minLines = 1
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    colors = CardDefaults.cardColors(hex)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(6.dp)
+                    ) {
+                        Text(
+                            text = "Kaveri Vidya Samsthe HS",
+                            modifier = Modifier
+                                .padding(12.dp),
+                            fontSize = 24.sp,
+                            color = Color.White,
+                            fontFamily = FontFamily.SansSerif,
+                            fontWeight = FontWeight.SemiBold,
 
-                )
+                            )
+                        Text(
+                            text = "Adichunchanagiri Road, Kuvempunagar\n" +
+                                    "Mysuru – 570 023\n" +
+                                    "\n" +
+                                    "Ph :- School :\n 0821 — 2566942, 8792685847\n\n" +
+                                    "E mail :– kaverividyasamsthehs@gmail.com",
+                            modifier = Modifier
+                                .padding(16.dp),
+                            fontFamily = FontFamily.SansSerif,
+                            color = Color.White,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Normal,
+                            minLines = 1
+
+                        )
+                    }
+                }
+            }
         }
     }
 }
+
+
+
+

@@ -37,9 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kvsSchool.kaverischool.R
+import com.kvsSchool.kaverischool.navigation.DestinationScreen
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 import com.kvsSchool.kaverischool.ui.theme.hex
 import com.kvsSchool.kaverischool.util.CheckSignedIn
+import com.kvsSchool.kaverischool.util.navigateTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,31 +105,31 @@ fun HomeScreen(
 //                        viewModel.getMyProfilesData()
 //                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = "Announcements") {
+                    HomeScreenCard(Modifier.weight(1f), text = " Announcements") {
 
        //                 navigateTo(navController, DestinationScreen.SavedScreen.route)
                     }
                 }
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "About Us") {
+                    HomeScreenCard(Modifier.weight(1f), text = "     About Us") {
 //                        viewModel.getMyProfilesData()
-//                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
+                        navigateTo(navController, DestinationScreen.AboutScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = "Fees Payment") {
+                    HomeScreenCard(Modifier.weight(1f), text = "  Fees Payment") {
 
-       //                 navigateTo(navController, DestinationScreen.SavedScreen.route)
+                        navigateTo(navController, DestinationScreen.FeesScreen.route)
                     }
                 }
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "Message Us") {
+                    HomeScreenCard(Modifier.weight(1f), text = "   Message Us") {
 //                        viewModel.getMyProfilesData()
 //                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = "Contact Us") {
+                    HomeScreenCard(Modifier.weight(1f), text = "    Contact Us") {
 
-       //                 navigateTo(navController, DestinationScreen.SavedScreen.route)
+                        navigateTo(navController, DestinationScreen.ContactScreen.route)
                     }
                 }
 

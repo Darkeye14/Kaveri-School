@@ -6,4 +6,7 @@ sealed class DestinationScreen(var route : String ) {
     data object Login :DestinationScreen("Login")
     data object SplashScreen:DestinationScreen("splashScreen")
     data object HomeScreen:DestinationScreen("homeScreen")
+    data object AboutScreen:DestinationScreen("aboutScreen")
+    data object ContactScreen:DestinationScreen("contactScreen")
+    data object FeesScreen:DestinationScreen("feesScreen")
 }
