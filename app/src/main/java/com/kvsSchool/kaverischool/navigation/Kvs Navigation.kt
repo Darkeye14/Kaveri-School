@@ -10,7 +10,9 @@ import com.kvsSchool.kaverischool.ui.Screens.AboutScreen
 import com.kvsSchool.kaverischool.ui.Screens.ContactScreen
 import com.kvsSchool.kaverischool.ui.Screens.FeesScreen
 import com.kvsSchool.kaverischool.ui.Screens.HomeScreen
+import com.kvsSchool.kaverischool.ui.Screens.PostsScreen
 import com.kvsSchool.kaverischool.ui.Screens.SignUpScreen
+import com.kvsSchool.kaverischool.ui.Screens.SinglePostScreen
 import com.kvsSchool.kaverischool.ui.Screens.SplashScreen
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 
@@ -40,6 +42,16 @@ fun KvsNavigation(modifier: Modifier = Modifier) {
         }
         composable(DestinationScreen.FeesScreen.route){
             FeesScreen()
+        }
+        composable(DestinationScreen.PostsScreen.route){
+            PostsScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(DestinationScreen.SinglePostScreen.route){
+            val postId = it.arguments?.getString("postId")
+            postId?.let {
+                SinglePostScreen(postId,navController,viewModel)
+            }
+
         }
     }
 

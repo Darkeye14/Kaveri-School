@@ -101,7 +101,7 @@ fun HomeScreen(
             ) {
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "Student Performance") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Photo Gallery") {
 //                        viewModel.getMyProfilesData()
 //                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
                     }
@@ -123,9 +123,9 @@ fun HomeScreen(
                 }
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "   Message Us") {
-//                        viewModel.getMyProfilesData()
-//                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
+                    HomeScreenCard(Modifier.weight(1f), text = "   Posts") {
+//
+                        navigateTo(navController, DestinationScreen.PostsScreen.route)
                     }
                     HomeScreenCard(Modifier.weight(1f), text = "    Contact Us") {
 
