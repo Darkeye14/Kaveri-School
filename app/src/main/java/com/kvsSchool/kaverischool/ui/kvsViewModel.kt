@@ -10,14 +10,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.kvsSchool.kaverischool.ANNOUNCEMET
 import com.kvsSchool.kaverischool.POSTS
+import com.kvsSchool.kaverischool.STUDENTS
 import com.kvsSchool.kaverischool.States.errorMsg
 import com.kvsSchool.kaverischool.States.imageUriList
 import com.kvsSchool.kaverischool.States.inProgress
 import com.kvsSchool.kaverischool.States.onError
 import com.kvsSchool.kaverischool.States.postsDataList
-import com.kvsSchool.kaverischool.States.signIn
+import com.kvsSchool.kaverischool.data.Account
+import com.kvsSchool.kaverischool.data.SignUpEvent
 import com.kvsSchool.kaverischool.data.recievingPost
+import com.kvsSchool.kaverischool.navigation.DestinationScreen
+import com.kvsSchool.kaverischool.util.navigateTo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,22 +37,43 @@ class kvsViewModel @Inject constructor(
     private val db: FirebaseFirestore,
     private val storage: FirebaseStorage
 ):ViewModel() {
-
+    var signIn = mutableStateOf(false)
+    val eventMutableState = mutableStateOf<SignUpEvent<String?>?>(null)
     init {
-        populatePost()
+        val currentUser = auth.currentUser
+        signIn.value = currentUser != null
+        currentUser?.uid?.let {
+            getUserData(it)
+        }
+    }
+    private fun getUserData(uid: String) {
+        inProgress.value = true
+        db.collection(STUDENTS)
+            .document(uid)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    handleException(error, "cannot retrieve user")
+                }
+                if (value != null) {
+                    val user = value.toObject<Account>()
+                    populatePost()
+                    inProgress.value = false
+
+                }
+            }
     }
 
     fun signUp1(
-        name: String,
+        studentName: String,
+        parentsName: String,
+        parentsNumber: String,
+        standard : String,
         email: String,
         password: String,
         section: String,
         navController: NavController
     ) = CoroutineScope(Dispatchers.IO).launch {
         inProgress.value = true
-        if (email.isEmpty() or password.isEmpty()) {
-            handleException(customMessage = "Please Fill All The Fields")
-        }
 
         auth.createUserWithEmailAndPassword(email, password)
 
@@ -57,33 +83,39 @@ class kvsViewModel @Inject constructor(
             .addOnCompleteListener {
 
                 if (it.isSuccessful) {
-                    createAccount(name, email, password,section)
                     signIn.value = true
+                    createAccount(standard,studentName,parentsName,parentsNumber, email, password,section)
                     inProgress.value = false
-    //                navigateTo(navController, DestinationScreen.HomeScreen.route)
+                    navigateTo(navController, DestinationScreen.HomeScreen.route)
                 } else {
                     handleException(customMessage = " SignUp error")
                 }
             }
     }
 
-    fun createAccount(
-        name: String,
+    private fun createAccount(
+        standard :String,
+        studentName: String,
+        parentsName: String,
+        parentsNumber: String,
         email: String,
-        pwd: String,
-        section :String
+        password: String,
+        section: String,
     ) = CoroutineScope(Dispatchers.IO).launch {
         delay(1000)
-        val acc = com.kvsSchool.kaverischool.data.Account(
-            name = name,
+        val acc = Account(
+            studentName = studentName,
+            parentsName = parentsName,
+            parentsNumber = parentsNumber,
             emailId = email,
-            password = pwd,
+            password = password,
             section = section,
+            standard = standard,
             authId = auth.currentUser?.uid
         )
-//        db.collection(ACCOUNTS)
-//            .document()
-//            .set(acc)
+        db.collection(STUDENTS)
+            .document()
+            .set(acc)
 
     }
     fun populatePost()= CoroutineScope(Dispatchers.IO).launch  {
@@ -103,6 +135,30 @@ class kvsViewModel @Inject constructor(
                 onError.value = true
             }
     }
+    fun populateAnnouncement(
+        classNo : String,
+        section : String = "A"
+    )= CoroutineScope(Dispatchers.IO).launch  {
+
+
+        inProgress.value = true
+        db.collection(ANNOUNCEMET).orderBy("sortTime", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { value->
+                if (value != null) {
+                    postsDataList.value = value.documents.mapNotNull {
+                        it.toObject<recievingPost>()
+                    }
+                    inProgress.value = false
+                }
+            }
+            .addOnFailureListener{
+                errorMsg.value = "Invalid User"
+                onError.value = true
+            }
+    }
+
+
     fun downloadMultipleImages(
         uri: String?,
         uid : String,
@@ -134,10 +190,13 @@ class kvsViewModel @Inject constructor(
         onError.value = true
         if (exception != null) {
                 errorMsg.value = exception.toString()
+            eventMutableState.value = SignUpEvent(exception.toString())
             }
         else{
             errorMsg.value = customMessage
+            eventMutableState.value = SignUpEvent(customMessage)
         }
+
 
         errorMsg.value = exception.toString()
         exception?.printStackTrace()

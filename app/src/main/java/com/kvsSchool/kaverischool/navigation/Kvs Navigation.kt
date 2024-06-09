@@ -1,5 +1,6 @@
 package com.kvsSchool.kaverischool.navigation
 
+import AnnouncementScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,13 +18,13 @@ import com.kvsSchool.kaverischool.ui.Screens.SplashScreen
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 
 @Composable
-fun KvsNavigation(modifier: Modifier = Modifier) {
+fun KvsNavigation() {
     val navController = rememberNavController()
     val viewModel = hiltViewModel<kvsViewModel>()
 
     NavHost(
         navController = navController ,
-        startDestination = DestinationScreen.HomeScreen.route
+        startDestination = DestinationScreen.SplashScreen.route
     ) {
         composable(DestinationScreen.SignUp.route){
             SignUpScreen(navController = navController, viewModel = viewModel)
@@ -45,6 +46,9 @@ fun KvsNavigation(modifier: Modifier = Modifier) {
         }
         composable(DestinationScreen.PostsScreen.route){
             PostsScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(DestinationScreen.AnnouncementsScreen.route){
+            AnnouncementScreen(navController = navController, viewModel = viewModel)
         }
         composable(DestinationScreen.SinglePostScreen.route){
             val postId = it.arguments?.getString("postId")

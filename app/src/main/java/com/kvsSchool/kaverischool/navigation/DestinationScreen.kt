@@ -10,6 +10,7 @@ sealed class DestinationScreen(var route : String ) {
     data object ContactScreen:DestinationScreen("contactScreen")
     data object FeesScreen:DestinationScreen("feesScreen")
     data object PostsScreen :DestinationScreen("PostsScreen")
+    data object AnnouncementsScreen :DestinationScreen("announcementsScreen")
     data object SinglePostScreen:DestinationScreen("singlePostScreen/{postId}"){
         fun createRoute(id : String) = "singlePostScreen/$id"
     }
