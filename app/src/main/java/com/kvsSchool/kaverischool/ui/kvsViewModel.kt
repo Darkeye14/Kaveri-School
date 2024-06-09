@@ -13,12 +13,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.kvsSchool.kaverischool.ANNOUNCEMET
 import com.kvsSchool.kaverischool.POSTS
 import com.kvsSchool.kaverischool.STUDENTS
+import com.kvsSchool.kaverischool.States.announcementsDataList
 import com.kvsSchool.kaverischool.States.errorMsg
 import com.kvsSchool.kaverischool.States.imageUriList
 import com.kvsSchool.kaverischool.States.inProgress
 import com.kvsSchool.kaverischool.States.onError
 import com.kvsSchool.kaverischool.States.postsDataList
 import com.kvsSchool.kaverischool.data.Account
+import com.kvsSchool.kaverischool.data.Announcement
 import com.kvsSchool.kaverischool.data.SignUpEvent
 import com.kvsSchool.kaverischool.data.recievingPost
 import com.kvsSchool.kaverischool.navigation.DestinationScreen
@@ -142,12 +144,14 @@ class kvsViewModel @Inject constructor(
 
 
         inProgress.value = true
-        db.collection(ANNOUNCEMET).orderBy("sortTime", Query.Direction.DESCENDING)
+        db.collection(ANNOUNCEMET).document(classNo)
+            .collection(section)
+            .orderBy("sortTime", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { value->
                 if (value != null) {
-                    postsDataList.value = value.documents.mapNotNull {
-                        it.toObject<recievingPost>()
+                    announcementsDataList.value = value.documents.mapNotNull {
+                        it.toObject<Announcement>()
                     }
                     inProgress.value = false
                 }

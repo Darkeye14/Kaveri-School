@@ -148,7 +148,7 @@ fun PostsScreen(
                                     modifier = Modifier
                                         .background(Color.LightGray)
                                         .fillMaxWidth()
-                                        .size(175.dp)
+                                        .size(225.dp)
                                         .padding(12.dp)
                                         .clip(CircleShape),
                                     contentScale = ContentScale.Inside

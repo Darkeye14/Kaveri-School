@@ -185,12 +185,19 @@ fun AnnouncementsCard(
                     modifier = Modifier
                         .padding(12.dp)
                 )
+
+                Spacer(modifier = Modifier.padding(10.dp))
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = post.timeStamp ?: "recently",
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .padding(12.dp)
                 )
+
                 Spacer(modifier = Modifier.padding(10.dp))
             }
 

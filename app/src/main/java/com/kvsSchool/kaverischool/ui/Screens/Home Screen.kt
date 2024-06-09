@@ -107,7 +107,7 @@ fun HomeScreen(
                     }
                     HomeScreenCard(Modifier.weight(1f), text = " Announcements") {
 
-       //                 navigateTo(navController, DestinationScreen.SavedScreen.route)
+                        navigateTo(navController, DestinationScreen.AnnouncementsScreen.route)
                     }
                 }
 
