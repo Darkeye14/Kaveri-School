@@ -18,7 +18,9 @@ data class Announcement(
     val sortTime : String?="",
     val timeStamp :String?="",
 )
-
+data class PicUid(
+    val uid : String ?= ""
+)
 data class recievingPost(
     val title :String? = "",
     val disc :String ? = "",

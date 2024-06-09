@@ -114,7 +114,7 @@ fun PostCard(
             .clickable {
                 onItemClick.invoke()
             },
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
+        colors = CardDefaults.cardColors(hex)
     ) {
         Column(
             modifier = modifier
@@ -127,6 +127,7 @@ fun PostCard(
             Text(
                 text = post.title ?: "     Attention!!",
                 fontWeight = FontWeight.Bold,
+                color = Color.White,
                 fontSize = 20.sp,
                 maxLines = 1,
                 modifier = Modifier
@@ -138,6 +139,7 @@ fun PostCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
+                    color = Color.White,
                     text = post.timeStamp ?: "recently",
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
@@ -160,7 +162,7 @@ fun AnnouncementsCard(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(12.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
+        colors = CardDefaults.cardColors(hex)
     ) {
         Column(
             modifier = modifier
@@ -172,6 +174,7 @@ fun AnnouncementsCard(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 maxLines = 1,
+                color = Color.White,
                 modifier = Modifier
                     .padding(12.dp)
             )
@@ -181,6 +184,7 @@ fun AnnouncementsCard(
             ) {
                 Text(
                     text = post.text ?: "Empty",
+                    color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .padding(12.dp)
@@ -193,6 +197,7 @@ fun AnnouncementsCard(
             ) {
                 Text(
                     text = post.timeStamp ?: "recently",
+                    color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .padding(12.dp)

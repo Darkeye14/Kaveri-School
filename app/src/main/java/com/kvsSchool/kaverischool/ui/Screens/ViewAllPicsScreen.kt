@@ -4,21 +4,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,19 +34,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.kvsSchool.kaverischool.R
+import com.kvsSchool.kaverischool.States.allImageUriList
 import com.kvsSchool.kaverischool.States.imageUriList
-import com.kvsSchool.kaverischool.States.postsDataList
+import com.kvsSchool.kaverischool.States.profilesPics
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 import com.kvsSchool.kaverischool.ui.theme.hex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SinglePostScreen(
-    postId: String,
-
+fun ViewAllPicsScreen(
     viewModel: kvsViewModel
 ) {
 
@@ -74,18 +70,17 @@ fun SinglePostScreen(
 
         }
     ) {
-        val currentPost = postsDataList.value.first { it.uid == postId }
-        imageUriList.clear()
-        currentPost.imageList?.forEach {
-            currentPost.uid?.let { it1 -> viewModel.downloadMultipleImages(it, it1) }
-        }
+
         Box(
             modifier = Modifier
-                .background(Color.White)
+                .background(Color.Transparent)
                 .padding(it)
                 .fillMaxHeight()
                 .fillMaxSize(),
         ) {
+            profilesPics.value.forEach {
+                Text(text = it.uid.toString())
+            }
             Image(
                 alpha = 0.40f,
                 painter = painterResource(id = R.drawable.whatsapp_kaveri),
@@ -94,75 +89,46 @@ fun SinglePostScreen(
                 modifier = Modifier
                     .fillMaxSize()
             )
+            if (allImageUriList.isEmpty()) {
 
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Adaptive(200.dp),
-                verticalItemSpacing = 4.dp,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    items(imageUriList) { photo ->
-                        AsyncImage(
-                            model = photo,
-                            contentScale = ContentScale.Crop,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .background(color = Color.Transparent),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Card(
+                        colors = CardDefaults.cardColors(hex)
+                    ) {
+
+                        Text(
+                            text = "No Photos Available",
+                            fontSize = 25.sp,
+                            modifier = Modifier.padding(8.dp)
                         )
                     }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
+                }
+            } else {
 
-
-//            LazyColumn(
-//                modifier = Modifier.fillMaxSize()
-//                    .background(Color.Transparent),
-//                contentPadding = it,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//
-//            ) {
-//                items(imageUriList){
-//                    AsyncImage(
-//                        model = it,
-//                        contentDescription = null,
-//                        Modifier.wrapContentSize()
-//                            .size(250.dp)
-//                            .padding(8.dp),
-//                        contentScale = ContentScale.FillBounds
-//                    )
-//                }
-//            }
-
-//            Card(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(it),
-//                shape = CardDefaults.outlinedShape,
-//                colors = CardDefaults.cardColors(hex)
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(it)
-//                        .verticalScroll(rememberScrollState())
-//                ) {
-//
-//                    Text(
-//                        text = currentPost.title ?: "POST",
-//                        color = Color.White,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = 24.sp
-//                        )
-//
-//
-//                    Text(
-//                        text = currentPost.disc ?:"",
-//                        color = Color.White,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = 24.sp
-//                    )
-//
-//                }
-//            }
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(8.dp),
+                ) {
+                    items(allImageUriList) {
+                        AsyncImage(
+                            model = it,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        )
+                    }
+                }
+            }
         }
     }
 }

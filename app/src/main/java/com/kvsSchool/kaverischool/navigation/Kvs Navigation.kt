@@ -15,6 +15,7 @@ import com.kvsSchool.kaverischool.ui.Screens.PostsScreen
 import com.kvsSchool.kaverischool.ui.Screens.SignUpScreen
 import com.kvsSchool.kaverischool.ui.Screens.SinglePostScreen
 import com.kvsSchool.kaverischool.ui.Screens.SplashScreen
+import com.kvsSchool.kaverischool.ui.Screens.ViewAllPicsScreen
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 
 @Composable
@@ -24,7 +25,7 @@ fun KvsNavigation() {
 
     NavHost(
         navController = navController ,
-        startDestination = DestinationScreen.SplashScreen.route
+        startDestination = DestinationScreen.HomeScreen.route
     ) {
         composable(DestinationScreen.SignUp.route){
             SignUpScreen(navController = navController, viewModel = viewModel)
@@ -44,6 +45,9 @@ fun KvsNavigation() {
         composable(DestinationScreen.FeesScreen.route){
             FeesScreen()
         }
+        composable(DestinationScreen.AllImageScreen.route){
+            ViewAllPicsScreen(viewModel = viewModel)
+        }
         composable(DestinationScreen.PostsScreen.route){
             PostsScreen(navController = navController, viewModel = viewModel)
         }
@@ -53,7 +57,7 @@ fun KvsNavigation() {
         composable(DestinationScreen.SinglePostScreen.route){
             val postId = it.arguments?.getString("postId")
             postId?.let {
-                SinglePostScreen(postId,navController,viewModel)
+                SinglePostScreen(postId,viewModel)
             }
 
         }

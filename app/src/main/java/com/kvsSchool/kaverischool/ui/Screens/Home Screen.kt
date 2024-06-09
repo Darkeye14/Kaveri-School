@@ -103,7 +103,7 @@ fun HomeScreen(
                 Row(modifier = Modifier.padding(8.dp)) {
                     HomeScreenCard(Modifier.weight(1f), text = "Photo Gallery") {
 //                        viewModel.getMyProfilesData()
-//                        navigateTo(navController, DestinationScreen.MyProfilesScreen.route)
+                        navigateTo(navController, DestinationScreen.AllImageScreen.route)
                     }
                     HomeScreenCard(Modifier.weight(1f), text = " Announcements") {
 
@@ -113,7 +113,7 @@ fun HomeScreen(
 
                 Row(modifier = Modifier.padding(8.dp)) {
                     HomeScreenCard(Modifier.weight(1f), text = "     About Us") {
-//                        viewModel.getMyProfilesData()
+
                         navigateTo(navController, DestinationScreen.AboutScreen.route)
                     }
                     HomeScreenCard(Modifier.weight(1f), text = "  Fees Payment") {

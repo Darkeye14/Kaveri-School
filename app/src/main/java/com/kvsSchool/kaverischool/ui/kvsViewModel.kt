@@ -10,9 +10,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.kvsSchool.kaverischool.ALLPICS
 import com.kvsSchool.kaverischool.ANNOUNCEMET
 import com.kvsSchool.kaverischool.POSTS
 import com.kvsSchool.kaverischool.STUDENTS
+import com.kvsSchool.kaverischool.States.allImageUriList
 import com.kvsSchool.kaverischool.States.announcementsDataList
 import com.kvsSchool.kaverischool.States.errorMsg
 import com.kvsSchool.kaverischool.States.imageUriList
@@ -20,6 +22,7 @@ import com.kvsSchool.kaverischool.States.inProgress
 import com.kvsSchool.kaverischool.States.onError
 import com.kvsSchool.kaverischool.States.postsDataList
 import com.kvsSchool.kaverischool.data.Account
+import com.kvsSchool.kaverischool.data.PicUid
 import com.kvsSchool.kaverischool.data.Announcement
 import com.kvsSchool.kaverischool.data.SignUpEvent
 import com.kvsSchool.kaverischool.data.recievingPost
@@ -44,12 +47,15 @@ class kvsViewModel @Inject constructor(
     init {
         val currentUser = auth.currentUser
         signIn.value = currentUser != null
+        onShowAllPics()
         currentUser?.uid?.let {
             getUserData(it)
         }
     }
     private fun getUserData(uid: String) {
         inProgress.value = true
+        populatePost()
+        onShowAllPics()
         db.collection(STUDENTS)
             .document(uid)
             .addSnapshotListener { value, error ->
@@ -59,6 +65,7 @@ class kvsViewModel @Inject constructor(
                 if (value != null) {
                     val user = value.toObject<Account>()
                     populatePost()
+                    onShowAllPics()
                     inProgress.value = false
 
                 }
@@ -137,6 +144,8 @@ class kvsViewModel @Inject constructor(
                 onError.value = true
             }
     }
+
+
     fun populateAnnouncement(
         classNo : String,
         section : String = "A"
@@ -177,8 +186,43 @@ class kvsViewModel @Inject constructor(
                 .getBytes(maxDownloadSize)
                 .await()
             imageUri.value = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-
             imageUriList.add(imageUri.value)
+
+
+        } catch (e: Exception) {
+            handleException(e)
+        }
+        inProgress.value = false
+    }
+
+    fun onShowAllPics() =CoroutineScope(Dispatchers.IO).launch{
+        inProgress.value = true
+
+       val snapShot =  db.collection(ALLPICS)
+            .get()
+            .await()
+
+            for(doc in snapShot.documents){
+                val post = doc.toObject<PicUid>()
+                downloadAllImages(post!!.uid)
+
+            }
+        inProgress.value = false
+    }
+
+    fun downloadAllImages(uid : String?) = CoroutineScope(Dispatchers.IO).launch {
+        val imageUri = mutableStateOf<Bitmap?>(null)
+        inProgress.value = true
+
+        try {
+            val maxDownloadSize = 5L * 1024 * 1024
+            val storageRef = FirebaseStorage.getInstance().reference
+
+            val bytes = storageRef.child("AllImages/$uid")
+                .getBytes(maxDownloadSize)
+                .await()
+            imageUri.value = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            allImageUriList.add(imageUri.value)
 
 
         } catch (e: Exception) {
