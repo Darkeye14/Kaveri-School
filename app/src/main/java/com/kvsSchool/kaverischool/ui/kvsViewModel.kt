@@ -173,7 +173,6 @@ class kvsViewModel @Inject constructor(
 
 
     fun downloadMultipleImages(
-        uri: String?,
         uid : String,
     ) = CoroutineScope(Dispatchers.IO).launch {
         val imageUri = mutableStateOf<Bitmap?>(null)
@@ -182,7 +181,7 @@ class kvsViewModel @Inject constructor(
         try {
             val maxDownloadSize = 5L * 1024 * 1024
             val storageRef = FirebaseStorage.getInstance().reference
-            val bytes = storageRef.child("images/$uid/$uri")
+            val bytes = storageRef.child("PostImages/$uid")
                 .getBytes(maxDownloadSize)
                 .await()
             imageUri.value = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)

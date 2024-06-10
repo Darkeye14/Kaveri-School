@@ -2,23 +2,14 @@ package com.kvsSchool.kaverischool.ui.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +27,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.kvsSchool.kaverischool.R
 import com.kvsSchool.kaverischool.States.imageUriList
@@ -76,8 +66,12 @@ fun SinglePostScreen(
     ) {
         val currentPost = postsDataList.value.first { it.uid == postId }
         imageUriList.clear()
-        currentPost.imageList?.forEach {
-            currentPost.uid?.let { it1 -> viewModel.downloadMultipleImages(it, it1) }
+        if(currentPost.imageUidList?.isNotEmpty() == true) {
+            currentPost.imageUidList.forEach {
+                if (it != null) {
+                    viewModel.downloadMultipleImages(it)
+                }
+            }
         }
         Box(
             modifier = Modifier
@@ -95,74 +89,24 @@ fun SinglePostScreen(
                     .fillMaxSize()
             )
 
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Adaptive(200.dp),
-                verticalItemSpacing = 4.dp,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    items(imageUriList) { photo ->
-                        AsyncImage(
-                            model = photo,
-                            contentScale = ContentScale.Crop,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                        )
-                    }
-                },
+            LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            )
+                    .background(Color.Transparent),
+                contentPadding = it,
+                horizontalAlignment = Alignment.CenterHorizontally
 
-
-//            LazyColumn(
-//                modifier = Modifier.fillMaxSize()
-//                    .background(Color.Transparent),
-//                contentPadding = it,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//
-//            ) {
-//                items(imageUriList){
-//                    AsyncImage(
-//                        model = it,
-//                        contentDescription = null,
-//                        Modifier.wrapContentSize()
-//                            .size(250.dp)
-//                            .padding(8.dp),
-//                        contentScale = ContentScale.FillBounds
-//                    )
-//                }
-//            }
-
-//            Card(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(it),
-//                shape = CardDefaults.outlinedShape,
-//                colors = CardDefaults.cardColors(hex)
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(it)
-//                        .verticalScroll(rememberScrollState())
-//                ) {
-//
-//                    Text(
-//                        text = currentPost.title ?: "POST",
-//                        color = Color.White,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = 24.sp
-//                        )
-//
-//
-//                    Text(
-//                        text = currentPost.disc ?:"",
-//                        color = Color.White,
-//                        fontWeight = FontWeight.SemiBold,
-//                        fontSize = 24.sp
-//                    )
-//
-//                }
-//            }
+            ) {
+                items(imageUriList){
+                    AsyncImage(
+                        model = it,
+                        contentDescription = null,
+                        Modifier.wrapContentSize()
+                            .size(250.dp)
+                            .padding(8.dp),
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
+            }
         }
     }
 }
