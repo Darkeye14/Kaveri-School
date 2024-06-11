@@ -27,8 +27,8 @@ fun KvsNavigation() {
         navController = navController ,
         startDestination = DestinationScreen.HomeScreen.route
     ) {
-        composable(DestinationScreen.SignUp.route){
-            SignUpScreen(navController = navController, viewModel = viewModel)
+        composable(DestinationScreen.Login.route){
+            LoginScreen(navController = navController, viewModel = viewModel)
         }
         composable(DestinationScreen.SplashScreen.route){
             SplashScreen(navController = navController, viewModel = viewModel)

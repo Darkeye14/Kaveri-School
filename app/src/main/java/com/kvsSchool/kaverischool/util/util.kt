@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.kvsSchool.kaverischool.States.errorMsg
 import com.kvsSchool.kaverischool.States.toastState
 import com.kvsSchool.kaverischool.data.Announcement
 import com.kvsSchool.kaverischool.data.ToggleableInfo
@@ -73,11 +74,17 @@ fun CheckSignedIn(
 
     } else if (!signIn) {
         LaunchedEffect(key1 = Unit) {
-            navController.navigate(DestinationScreen.SignUp.route) {
+            navController.navigate(DestinationScreen.Login.route) {
                 popUpTo(0)
             }
         }
     }
+}
+@Composable
+fun OnErrorMessage(
+    modifier: Modifier = Modifier
+) {
+    Toast.makeText(LocalContext.current, errorMsg.value, Toast.LENGTH_SHORT).show()
 }
 
 fun navigateTo(
@@ -91,9 +98,7 @@ fun navigateTo(
 }
 
 @Composable
-fun OnToastMessage(
-    modifier: Modifier = Modifier
-) {
+fun OnToastMessage() {
     if (toastState.value)
         Toast.makeText(LocalContext.current, "Please Fill All Fields", Toast.LENGTH_LONG).show()
     toastState.value = false
