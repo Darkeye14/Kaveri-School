@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -101,33 +103,35 @@ fun HomeScreen(
             ) {
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "Photo Gallery") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Photo\nGallery") {
 //                        viewModel.getMyProfilesData()
                         navigateTo(navController, DestinationScreen.AllImageScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = " Announcements") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Alerts") {
 
                         navigateTo(navController, DestinationScreen.AnnouncementsScreen.route)
                     }
                 }
 
-                Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "     About Us") {
+                Row(modifier = Modifier.padding(8.dp)
+
+                ) {
+                    HomeScreenCard(Modifier.weight(1f), text = "About\n Us") {
 
                         navigateTo(navController, DestinationScreen.AboutScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = "  Fees Payment") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Fees\nPayment") {
 
                         navigateTo(navController, DestinationScreen.FeesScreen.route)
                     }
                 }
 
                 Row(modifier = Modifier.padding(8.dp)) {
-                    HomeScreenCard(Modifier.weight(1f), text = "   Posts") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Posts") {
 //
                         navigateTo(navController, DestinationScreen.PostsScreen.route)
                     }
-                    HomeScreenCard(Modifier.weight(1f), text = "    Contact Us") {
+                    HomeScreenCard(Modifier.weight(1f), text = "Contact\nUs") {
 
                         navigateTo(navController, DestinationScreen.ContactScreen.route)
                     }
@@ -156,12 +160,13 @@ fun HomeScreenCard(
         shape = CardDefaults.outlinedShape,
         colors = CardDefaults.cardColors(hex)) {
         Row(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(8.dp)
+                    .wrapContentWidth(),
                 textAlign = TextAlign.Center,
                 text = text,
                 maxLines = 2,

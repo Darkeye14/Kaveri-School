@@ -50,7 +50,7 @@ fun AboutScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = hex,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    titleContentColor = Color.White
                 )
             )
         },

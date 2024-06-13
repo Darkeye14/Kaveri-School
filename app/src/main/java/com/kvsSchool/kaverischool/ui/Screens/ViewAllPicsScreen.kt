@@ -120,7 +120,7 @@ fun ViewAllPicsScreen(
                     items(allImageUriList) {
                         AsyncImage(
                             model = it,
-                            contentScale = ContentScale.Crop,
+                            contentScale = ContentScale.Inside,
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxWidth()

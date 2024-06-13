@@ -57,11 +57,17 @@ fun LoginScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.app_name))
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = 38.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily.Cursive,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = hex,
-                    titleContentColor = Color.White
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         },
@@ -114,6 +120,7 @@ fun LoginScreen(
 
                 Text(
                     text = "Log In",
+                    color = Color.Black,
                     fontSize = 30.sp,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
