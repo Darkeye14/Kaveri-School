@@ -4,11 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.kvsSchool.kaverischool.ui.kvsViewModel
 import com.kvsSchool.kaverischool.ui.theme.hex
 import com.kvsSchool.kaverischool.util.CheckSignedIn
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
@@ -24,6 +26,5 @@ fun SplashScreen(
             viewModel = viewModel,
             navController = navController
         )
-
     }
 }

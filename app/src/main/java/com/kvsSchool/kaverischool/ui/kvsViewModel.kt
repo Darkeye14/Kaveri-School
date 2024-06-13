@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
@@ -41,21 +43,20 @@ class kvsViewModel @Inject constructor(
     val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
     private val storage: FirebaseStorage
-):ViewModel() {
+) : ViewModel() {
     var signIn = mutableStateOf(false)
     val eventMutableState = mutableStateOf<SignUpEvent<String?>?>(null)
+
     init {
         val currentUser = auth.currentUser
         signIn.value = currentUser != null
-        onShowAllPics()
         currentUser?.uid?.let {
             getUserData(it)
         }
     }
+
     private fun getUserData(uid: String) {
         inProgress.value = true
-        populatePost()
-        onShowAllPics()
         db.collection(STUDENTS)
             .document(uid)
             .addSnapshotListener { value, error ->
@@ -70,13 +71,65 @@ class kvsViewModel @Inject constructor(
 
                 }
             }
+        inProgress.value = false
+    }
+
+    fun login(
+        email: String,
+        password: String,
+        navController: NavController
+
+    ) = CoroutineScope(Dispatchers.IO).launch {
+        inProgress.value = true
+
+
+
+        if (email.isEmpty() || password.isEmpty()) {
+            handleException(customMessage = "Please fill all the fields")
+
+        } else {
+            inProgress.value = true
+            try {
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnFailureListener {
+                        handleException(it)
+                    }
+                    .addOnCompleteListener {
+
+                        if (it.isSuccessful) {
+                            signIn.value = true
+                            auth.currentUser?.uid?.let {
+                                getUserData(it)
+                            }
+                            inProgress.value = false
+                            afterLogin(navController)
+                        } else {
+                            handleException(it.exception, customMessage = "Login failed")
+                        }
+
+                    }
+                    .await()
+            } catch (e: FirebaseAuthException) {
+                handleException(e)
+            }
+            inProgress.value = false
+
+        }
+    }
+
+    private fun afterLogin(
+        navController: NavController
+    ) = CoroutineScope(Dispatchers.Main).launch {
+        delay(500)
+        navigateTo(navController, DestinationScreen.HomeScreen.route)
     }
 
     fun signUp1(
         studentName: String,
         parentsName: String,
         parentsNumber: String,
-        standard : String,
+        standard: String,
         email: String,
         password: String,
         section: String,
@@ -93,7 +146,15 @@ class kvsViewModel @Inject constructor(
 
                 if (it.isSuccessful) {
                     signIn.value = true
-                    createAccount(standard,studentName,parentsName,parentsNumber, email, password,section)
+                    createAccount(
+                        standard,
+                        studentName,
+                        parentsName,
+                        parentsNumber,
+                        email,
+                        password,
+                        section
+                    )
                     inProgress.value = false
                     navigateTo(navController, DestinationScreen.HomeScreen.route)
                 } else {
@@ -103,7 +164,7 @@ class kvsViewModel @Inject constructor(
     }
 
     private fun createAccount(
-        standard :String,
+        standard: String,
         studentName: String,
         parentsName: String,
         parentsNumber: String,
@@ -127,11 +188,13 @@ class kvsViewModel @Inject constructor(
             .set(acc)
 
     }
-    fun populatePost()= CoroutineScope(Dispatchers.IO).launch  {
+
+    fun populatePost() = CoroutineScope(Dispatchers.IO).launch {
         inProgress.value = true
+
         db.collection(POSTS).orderBy("sortTime", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener { value->
+            .addOnSuccessListener { value ->
                 if (value != null) {
                     postsDataList.value = value.documents.mapNotNull {
                         it.toObject<recievingPost>()
@@ -139,17 +202,18 @@ class kvsViewModel @Inject constructor(
                     inProgress.value = false
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 errorMsg.value = "Invalid User"
                 onError.value = true
             }
+        inProgress.value = true
     }
 
 
     fun populateAnnouncement(
-        classNo : String,
-        section : String = "A"
-    )= CoroutineScope(Dispatchers.IO).launch  {
+        classNo: String,
+        section: String = "A"
+    ) = CoroutineScope(Dispatchers.IO).launch {
 
 
         inProgress.value = true
@@ -157,7 +221,7 @@ class kvsViewModel @Inject constructor(
             .collection(section)
             .orderBy("sortTime", Query.Direction.DESCENDING)
             .get()
-            .addOnSuccessListener { value->
+            .addOnSuccessListener { value ->
                 if (value != null) {
                     announcementsDataList.value = value.documents.mapNotNull {
                         it.toObject<Announcement>()
@@ -165,7 +229,7 @@ class kvsViewModel @Inject constructor(
                     inProgress.value = false
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 errorMsg.value = "Invalid User"
                 onError.value = true
             }
@@ -173,7 +237,7 @@ class kvsViewModel @Inject constructor(
 
 
     fun downloadMultipleImages(
-        uid : String,
+        uid: String,
     ) = CoroutineScope(Dispatchers.IO).launch {
         val imageUri = mutableStateOf<Bitmap?>(null)
 
@@ -194,22 +258,21 @@ class kvsViewModel @Inject constructor(
         inProgress.value = false
     }
 
-    fun onShowAllPics() =CoroutineScope(Dispatchers.IO).launch{
+    fun onShowAllPics() = CoroutineScope(Dispatchers.IO).launch {
         inProgress.value = true
-
-       val snapShot =  db.collection(ALLPICS)
+        val snapShot = db.collection(ALLPICS)
             .get()
             .await()
 
-            for(doc in snapShot.documents){
-                val post = doc.toObject<PicUid>()
-                downloadAllImages(post!!.uid)
+        for (doc in snapShot.documents) {
+            val post = doc.toObject<PicUid>()
+            downloadAllImages(post!!.uid)
 
-            }
+        }
         inProgress.value = false
     }
 
-    fun downloadAllImages(uid : String?) = CoroutineScope(Dispatchers.IO).launch {
+    fun downloadAllImages(uid: String?) = CoroutineScope(Dispatchers.IO).launch {
         val imageUri = mutableStateOf<Bitmap?>(null)
         inProgress.value = true
 
@@ -236,10 +299,9 @@ class kvsViewModel @Inject constructor(
     ) {
         onError.value = true
         if (exception != null) {
-                errorMsg.value = exception.toString()
+            errorMsg.value = exception.toString()
             eventMutableState.value = SignUpEvent(exception.toString())
-            }
-        else{
+        } else {
             errorMsg.value = customMessage
             eventMutableState.value = SignUpEvent(customMessage)
         }

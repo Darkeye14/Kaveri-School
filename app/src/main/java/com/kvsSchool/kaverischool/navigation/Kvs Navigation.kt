@@ -11,8 +11,8 @@ import com.kvsSchool.kaverischool.ui.Screens.AboutScreen
 import com.kvsSchool.kaverischool.ui.Screens.ContactScreen
 import com.kvsSchool.kaverischool.ui.Screens.FeesScreen
 import com.kvsSchool.kaverischool.ui.Screens.HomeScreen
+import com.kvsSchool.kaverischool.ui.Screens.LoginScreen
 import com.kvsSchool.kaverischool.ui.Screens.PostsScreen
-import com.kvsSchool.kaverischool.ui.Screens.SignUpScreen
 import com.kvsSchool.kaverischool.ui.Screens.SinglePostScreen
 import com.kvsSchool.kaverischool.ui.Screens.SplashScreen
 import com.kvsSchool.kaverischool.ui.Screens.ViewAllPicsScreen
@@ -25,7 +25,7 @@ fun KvsNavigation() {
 
     NavHost(
         navController = navController ,
-        startDestination = DestinationScreen.HomeScreen.route
+        startDestination = DestinationScreen.Login.route
     ) {
         composable(DestinationScreen.Login.route){
             LoginScreen(navController = navController, viewModel = viewModel)
