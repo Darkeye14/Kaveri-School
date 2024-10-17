@@ -122,72 +122,11 @@ class kvsViewModel @Inject constructor(
         navController: NavController
     ) = CoroutineScope(Dispatchers.Main).launch {
         delay(500)
+        signIn.value = true
         navigateTo(navController, DestinationScreen.HomeScreen.route)
     }
 
-    fun signUp1(
-        studentName: String,
-        parentsName: String,
-        parentsNumber: String,
-        standard: String,
-        email: String,
-        password: String,
-        section: String,
-        navController: NavController
-    ) = CoroutineScope(Dispatchers.IO).launch {
-        inProgress.value = true
 
-        auth.createUserWithEmailAndPassword(email, password)
-
-            .addOnFailureListener {
-                handleException(it)
-            }
-            .addOnCompleteListener {
-
-                if (it.isSuccessful) {
-                    signIn.value = true
-                    createAccount(
-                        standard,
-                        studentName,
-                        parentsName,
-                        parentsNumber,
-                        email,
-                        password,
-                        section
-                    )
-                    inProgress.value = false
-                    navigateTo(navController, DestinationScreen.HomeScreen.route)
-                } else {
-                    handleException(customMessage = " SignUp error")
-                }
-            }
-    }
-
-    private fun createAccount(
-        standard: String,
-        studentName: String,
-        parentsName: String,
-        parentsNumber: String,
-        email: String,
-        password: String,
-        section: String,
-    ) = CoroutineScope(Dispatchers.IO).launch {
-        delay(1000)
-        val acc = Account(
-            studentName = studentName,
-            parentsName = parentsName,
-            parentsNumber = parentsNumber,
-            emailId = email,
-            password = password,
-            section = section,
-            standard = standard,
-            authId = auth.currentUser?.uid
-        )
-        db.collection(STUDENTS)
-            .document()
-            .set(acc)
-
-    }
 
     fun populatePost() = CoroutineScope(Dispatchers.IO).launch {
         inProgress.value = true
